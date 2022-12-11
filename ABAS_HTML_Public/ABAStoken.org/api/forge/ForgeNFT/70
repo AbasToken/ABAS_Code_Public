@@ -1,0 +1,19 @@
+{
+  "attributes": [
+    {
+      "trait_type": "Proof of Work",
+      "value": "50%"
+    },
+    {
+      "trait_type": "Proof of Stake",
+      "value": "25%"
+    },
+    {
+      "trait_type": "Proof of Auctions",
+      "value": "25%"
+    }
+  ],
+  "description": "This NFT is TOP SECRET.",
+  "image": "https://forgetoken.org/api/forge/ForgeNFT/Images/65.png",
+  "name": "Forge NFT #70"
+}

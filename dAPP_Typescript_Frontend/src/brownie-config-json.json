@@ -1,0 +1,165 @@
+{
+    "reports": {
+        "exclude_contracts": [
+            "SafeMath",
+            "MockV3Aggregator",
+            "DappToken",
+            "MockERC20"
+        ]
+    },
+    "dependencies": [
+        "smartcontractkit/chainlink-brownie-contracts@0.2.2",
+        "OpenZeppelin/openzeppelin-contracts@4.3.2"
+    ],
+    "compiler": {
+        "solc": {
+            "remappings": [
+                "@chainlink=smartcontractkit/chainlink-brownie-contracts@0.2.2",
+                "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.3.2"
+            ]
+        }
+    },
+    "autofetch_sources": true,
+    "dotenv": ".env",
+    "networks": {
+        "development": {
+            "verify": false
+        },
+        "polygon": {
+            "oldLP": "0x72909E1cB954A851E34c56cC0e65632Bbaa7C123",
+            "GAS": 43222321321,
+            "NEWsynethix_LP3": "0x8D98Fe010fcF92D36043B1D56d820Dbfcc327CaE",
+            "NEWsynethix_LP": "0x61bAF3Ae1E4Bd32e851F38A2D063767790783e3b",
+            "NEWsynethix_LP2": "0x75FDa0bE41f97cd9Ab0f521ce28857B70286BE88",
+            "sushi": "0xa27833d0acfc8fe565adb9bb656fa6c78ef1f6d2",
+            "synethix_LP": "0x7d28fa576a4e08922B01e897CE4f5517AD351578",
+            "xbtc": "0x71b821aa52a49f32eed535fca6eb5aa130085978",
+            "auction": "0xBb1fA87A4738B22F7d2D5EC34bA349375B4D86F0",
+            "LP_token": "0x562322f8e7131d0bb9f487ae566935d3be96406b",
+            "pow_token": "0xF44fB43066F7ECC91058E3A614Fb8A15A2735276",
+            "weth_token": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+            "fau_token": "0xFab46E002BbF0b4509813474841E0716E6730136",
+            "eth_usd_price_feed": "0x9326BFA02ADD2366b30bacB125260Af641031331",
+            "dai_usd_price_feed": "0x777A68032a88E5A84678A77Af2CD65A7b3c0775a",
+            "verify": true
+
+
+
+
+        },
+        "mumbai": {
+            "xbtc": "0x82BEF4FE55f694B8180A85E9cABBF37bc90622c0",
+            "auction": "0xcbC89Eed09Fef373351F55e32F42ca7d29759936",
+            "synethix_LP": "0x62498065a6a5156651d7ba243b7b6f4402a319a8",
+            "LP_token": "0x5c25fD62Ac76CC8476FA33a14547960ABB1621Eb",
+            "pow_token": "0xD73059c5503d17FD78FDD49E50488feCE0B16208",
+        
+
+            "synethix_LP2": "0x671a0DD73d5efd3d89edE569034661EE4F318a54",
+            "LP_token2": "0xE0e8F2F730a6F3abc39f2CB63A12E01261585210",
+            "weth_token": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+            "fau_token": "0xFab46E002BbF0b4509813474841E0716E6730136",
+            "eth_usd_price_feed": "0x9326BFA02ADD2366b30bacB125260Af641031331",
+            "dai_usd_price_feed": "0x777A68032a88E5A84678A77Af2CD65A7b3c0775a",
+            "verify": true
+        },
+        "goerli": {
+            "balVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+            "bForge": "0x96e0C917DD621Df9212C02319a1ac890dC6Ce6D9",
+            "xbtc": "0x25Ea7f0c08955ca281628441EFe3E813C8B5AB6C",
+            "auction": "0x6665c758c6B07016f55ED75a81f7B94dbB25162B",
+            "synethix_LP": "0xEEF06da8eC0e71551bd6FB1993042BA5b9A29746",
+            "LP_token": "0x52819AB9Ec2eCA4a00830C261bDd59A92ce9572C",
+            "pow_token": "0x04D2a6034Cb19BBC167F9f2fA31b7fb56771dC6f",
+            "poolid1": "0x52819ab9ec2eca4a00830c261bdd59a92ce9572c0002000000000000000002e5",
+            "poolid2": "0x6be79a54f119dbf9e8ebd9ded8c5bd49205bc62d0001000000000000000002e6",
+            "synethix_LP2": "0xd07df76BA07EcF0B70ea847Fbd5913a41598461e",
+            "LP_token2": "0x6bE79A54f119dBf9E8EbD9DeD8c5Bd49205BC62D",
+            "weth_token": "0xdFCeA9088c8A88A76FF74892C1457C17dfeef9C1",
+            "verify": true
+        },
+        "arbitrum2": {
+            "balVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+            "bForge": "0x11f38b2aff86ff9f253f6fd91378e4c7dadf5667",
+            "xbtc": "0x7cb16cb78ea464aD35c8a50ABF95dff3c9e09d5d",
+            "auction": "0xD7ccD71Aec0C8aFAf79c486dE1999E4d0Ace6c64",
+            "synethix_LP": "0x742FFd483129A0130913173f2643b828F942bf09",
+            "LP_token": "0xB61272cBf9F855bdC9bE58292a05af6f7C3D71bF",
+            "pow_token": "0xb40Fee8E0fbC58c7F4B6c144313874ccf91593Eb",
+            "poolid1": "0xb61272cbf9f855bdc9be58292a05af6f7c3d71bf00020000000000000000023c",
+            "poolid2": "0xd6f054c0892872b98fa7b9329a7851bddfe823af00010000000000000000023d",
+            "synethix_LP2": "0x49cD1F16977dbB37D17Db3507268187173F48289",
+            "LP_token2": "0xd6F054C0892872B98Fa7b9329A7851bdDFE823aF",
+            "weth_token": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+            "verify": true
+        },
+        "arbitrum": {
+            "balVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+            "bForge": "0x11f38b2aff86ff9f253f6fd91378e4c7dadf5667",
+            "xbtc": "0x7cb16cb78ea464aD35c8a50ABF95dff3c9e09d5d",
+            "auction": "0x73d61cbDCD1EA284c86E5fcd4ACE367daA3b3F77",
+            "synethix_LP": "0x857D66237491fCefe0C70080e2CA0f78F941A840",
+            "LP_token": "0x748951b8730da625d35a9a983d83b1a46afb7ca6",
+            "pow_token": "0x0afaF0C46B1cA13B204a516BF5c0314674f4930D",
+            "poolid1": "0x748951b8730da625d35a9a983d83b1a46afb7ca600020000000000000000028f",
+            "poolid2": "0xe8505551eaff948449198524fd3590fd22704e7e000100000000000000000290",
+            "synethix_LP2": "0x9C2bFE65CE567d2df89c8e3F9FB05B128C4cB384",
+            "LP_token2": "0xe8505551eaff948449198524fd3590fd22704e7e",
+            "weth_token": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+            "verify": true
+        },
+        "arbitrumOLD3": {
+            "balVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+            "bForge": "0x11f38b2aff86ff9f253f6fd91378e4c7dadf5667",
+            "xbtc": "0x7cb16cb78ea464aD35c8a50ABF95dff3c9e09d5d",
+            "auction": "0x5Eaf84f1c8bDC71bDae4F77d1e7201EeE277fFdA",
+            "synethix_LP": "0xAb18fF16783aCa80d9abEB1818d194A1960a3E70",
+            "LP_token": "0x090baf9b679e9a2eeab799f304bc30d25752d3c9",
+            "pow_token": "0xCad3B1cf25e61661E17223eFb53e635E518f2a38",
+            "poolid1": "0x090baf9b679e9a2eeab799f304bc30d25752d3c9000200000000000000000242",
+            "poolid2": "0x996b05f7c54c0c54ac4a16d8e566ab6f7f5039ca000100000000000000000243",
+            "synethix_LP2": "0x9762986c7C4f27670d1CB247b408fB42F2448bC3",
+            "LP_token2": "0x996b05f7c54c0c54ac4a16d8e566ab6f7f5039ca",
+            "weth_token": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+            "verify": true
+        },
+        "OLDgoerli": {
+            "balVault": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+            "bForge": "0x96e0C917DD621Df9212C02319a1ac890dC6Ce6D9",
+            "xbtc": "0x25Ea7f0c08955ca281628441EFe3E813C8B5AB6C",
+            "auction": "0x2bDd577B962586aB1105C17a9bF32Ab7a3d62Cdb",
+            "synethix_LP": "0x8Fb9346FD445Da730b51C84788335cd01225AB7A",
+            "LP_token": "0xCfCA23cA9CA720B6E98E3Eb9B6aa0fFC4a5C08B9",
+            "pow_token": "0x8ca687b2C5de8c08AC5Bb114d9dc110432a82603",
+            "poolid1": "0xcfca23ca9ca720b6e98e3eb9b6aa0ffc4a5c08b90002000000000000000002c3",
+            "poolid2": "0x5a6a8cffb4347ff7fc484bf5f0f8a2e234d342550001000000000000000002c4",
+            "synethix_LP2": "0xcb3c5715E143f7BaAFFbeCe6866C1d15967Da97e",
+            "LP_token2": "0x5A6A8cfFB4347fF7Fc484BF5f0F8a2E234d34255",
+            "weth_token": "0xdFCeA9088c8A88A76FF74892C1457C17dfeef9C1",
+            "verify": true
+        },
+        "rinkeby": {
+            "link_token": "0x01BE23585060835E02B77ef475b0Cc51aA1e0709",
+            "eth_usd_price_feed": "0x8A753747A1Fa494EC906cE90E9f37563A8AF630e",
+            "dai_usd_price_feed": "0x2bA49Aaa16E6afD2a993473cfB70Fa8559B523cF",
+            "verify": true
+        },
+        "kovan": {
+            "sushi": "0xb9e07554e787dbc634c7103b06865d884eac19bc",
+            "synethix_LP": "0x958C06E2e2Ed4442b2F6A6B78ed6B4f64d8bbd5C",
+            "xbtc": "0x7D9e45a9f0E786468cF2545F998416Ab16bF0Ae7",
+            "auction": "0xdAc827e598d2B57616D281858A7943d6c29B8556",
+            "LP_token": "0xe8C66B9d488324a47759b138e163188146e9ACbE",
+            "pow_token": "0x67cc6ffE745BED09A4C254Ba03fFF6A9f050cA5F",
+            "weth_token": "0xd0a1e359811322d97991e03f863a0c30c2cf029c",
+            "fau_token": "0xFab46E002BbF0b4509813474841E0716E6730136",
+            "eth_usd_price_feed": "0x9326BFA02ADD2366b30bacB125260Af641031331",
+            "dai_usd_price_feed": "0x777A68032a88E5A84678A77Af2CD65A7b3c0775a",
+            "verify": true
+        }
+    },
+    "wallets": {
+        "from_key": "${PRIVATE_KEY}",
+        "from_mnemonic": "${MNEMONIC}"
+    }
+}
