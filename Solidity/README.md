@@ -9,7 +9,7 @@ ABAS Arbitrum: ? Waiting to be Deployed ?
 1) Launch ABAS.sol for ABAS Token
 
 2) You will recieve 1 Token to start Balancer LP with bForge(33%) and 0xBTC(33%) and LP with ETH (2 LPs) after launching the contracts
-2a) Set each pool up as follows - Set up pool #1 as ABAS then ETH
+2a) Set up pool #1 as ABAS then ETH
 
       -This gives you LP Token #1
 
