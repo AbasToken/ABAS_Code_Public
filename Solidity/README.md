@@ -11,11 +11,15 @@ ABAS Arbitrum: ? Waiting to be Deployed ?
 2) You will recieve 1 Token to start Balancer LP with bForge(33%) and 0xBTC(33%) and LP with ETH (2 LPs) after launching the contracts
 2a) Set each pool up as follows 
     Set up pool #1 as ABAS then ETH
+
       -This gives you LP Token #1
+
     **HALF A ABAS TOKEN FOR EACH POOL MAX**
 
 2b) Set up pool #2 as follows ABAS then 0xBTC then bForge
+
       -This gives you LP Token #2
+
     **HALF A ABAS TOKEN FOR EACH POOL MAX**
     
 3) Launch ABAS Auction Contract
