@@ -1,5 +1,4 @@
-# Test
-MUST LAUNCH ON LEDGER to safetly have admin in Staking contracts for adding tokens
+# MUST LAUNCH ON LEDGER to safetly have admin in Staking contracts for adding tokens
 
 Get 0xBTC Address and bForge Address and ABAS Address on Arbitrum
 0xBTC Arbitrum: 0x7cb16cb78ea464aD35c8a50ABF95dff3c9e09d5d
