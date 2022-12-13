@@ -84,10 +84,15 @@ namespace SoliditySHA3Miner.Miner
         {
             var hashString = new StringBuilder();
             hashString.Append("Hashrates:");
-
+            var zero = 0.0;
+            foreach (var device in Devices.Where(d => d.AllowDevice))
+                zero = GetHashRateByDevice(device) / 1000000.0f;
             foreach (var device in Devices.Where(d => d.AllowDevice))
                 hashString.AppendFormat(" {0} MH/s", GetHashRateByDevice(device) / 1000000.0f);
-
+            if (zero == 0)
+            {
+                hashString.Append(", Normal for it to say 0.  Means we have solved the current challenge and are awaiting current reward to be greater than MinABASperMint.");
+            }
             PrintMessage("CUDA", string.Empty, -1, "Info", hashString.ToString());
 
             if (HasMonitoringAPI)

@@ -10,7 +10,7 @@ import brownieConfig from "../../brownie-config-json.json"
 import helperConfig from "../../helper-config.json"
 
 import { constants } from "ethers"
-import {useStakingBalance, useStakingBalance2, useUnstakeTokens2, useStakingBalanceETHz, useStakingBalance3} from "../../hooks"
+import {useStakingBalance, useStakingBalance2, useStakingBalance22ND, useStakingBalance32ND, useStakingBalanceETHz2ND, useStakingBalance2ND, useStakingBalanceETHz, useStakingBalance3} from "../../hooks"
 export interface WalletBalanceProps {
   token: Token;
 }
@@ -84,6 +84,35 @@ export const WalletBalance = ({ token }: WalletBalanceProps) => {
   const formattedBalance322: number = balance3223
   ? parseFloat(formatUnits(balance3223, 18))
   : 0
+
+
+
+
+
+  const balContractETH2 = useStakingBalanceETHz2ND(auctionaddress)
+  var balOfStakingETH = 0
+
+  const formatedStakingETH2: number = balContractETH
+  ? parseFloat(formatUnits(balContractETH, 18))
+  : 0
+
+  const stastd = useStakingBalance32ND(LPTokenAddress)
+  var balance3 = stastd
+  console.log("ffd", balance3)
+  const formattedBalance3z: number = balance3
+  ? parseFloat(formatUnits(balance3, 18))
+  : 0
+  var balance322 = useStakingBalance22ND(xbtcTokenAddress)
+
+  const formattedBalance32z: number = balance322
+  ? parseFloat(formatUnits(balance322, 18))
+  : 0
+
+  var balance3223 = useStakingBalance2ND(proofOfWorkAddress)
+
+  const formattedBalance322z: number = balance3223
+  ? parseFloat(formatUnits(balance3223, 18))
+  : 0
   var eth = 'https://forgetoken.org/api/img/eth1.png'
   var balz = 'https://forgetoken.org/api/img/Balancer.png'
   var image2 = 'https://abastoken.org/static/media/eth.6e1743e3.png'
@@ -149,38 +178,34 @@ export const WalletBalance = ({ token }: WalletBalanceProps) => {
     />
   );
     }
-var gezz
-    if(formattedTokenBalance > 0){
-      gezz = <a href="https://quickswap.exchange/#/remove/0xF44fB43066F7ECC91058E3A614Fb8A15A2735276/0x71B821aa52a49F32EEd535fCA6Eb5aa130085978" >Remove Liquidity from LP</a>
-}
   return (        <>
       <div className={classes.contentContainer}>  <h2>
       <BalanceMsg
         label={`Your Ethereum `}
         amount={formattedBalance2zz.toFixed(18)}
         tokenImgSrc={eth}
-      /> &nbsp; &nbsp; &nbsp;<a href="https://quickswap.exchange/#/swap?inputCurrency=0x71b821aa52a49f32eed535fca6eb5aa130085978&outputCurrency=0xF44fB43066F7ECC91058E3A614Fb8A15A2735276">Buy Forge</a>
+      /> &nbsp; &nbsp; &nbsp;<a href="https://bridge.arbitrum.io/">Bridge eth from Mainnet</a>
 </h2><h2>
       <BalanceMsg
         label={`Your ABAS `}
         amount={formattedBalance22.toFixed(18)}
         tokenImgSrc={imagez}
-      /> &nbsp; &nbsp; &nbsp;<a href="https://quickswap.exchange/#/swap?inputCurrency=0x71b821aa52a49f32eed535fca6eb5aa130085978&outputCurrency=0xF44fB43066F7ECC91058E3A614Fb8A15A2735276">Buy Forge</a>
+      /> &nbsp; &nbsp; &nbsp;<a href="https://app.balancer.fi/#/arbitrum/trade/0x82af49447d8a07e3bd95bd0d56f35241523fbab1/0x0afaF0C46B1cA13B204a516BF5c0314674f4930D">Buy ABAS</a>
 </h2>
 <h2>
       <BalanceMsg
         label={`Your 0xBTC `}
         amount={formattedBalance2.toFixed(8)}
         tokenImgSrc={imagezz}
-        />&nbsp; &nbsp; &nbsp;<a href="https://quickswap.exchange/#/swap?outputCurrency=0x71b821aa52a49f32eed535fca6eb5aa130085978">Buy 0xBitcoin on Polygon</a>
+        />&nbsp; &nbsp; &nbsp;<a href="https://app.balancer.fi/#/arbitrum/trade/0x0afaF0C46B1cA13B204a516BF5c0314674f4930D/0x7cb16cb78ea464aD35c8a50ABF95dff3c9e09d5d">Buy 0xBitcoin on Arbitrum</a>
         </h2>
         <h2>
         <BalanceMsg
           label={`Your Wallets LP Tokens `}
           amount={formattedTokenBalance.toFixed(18)}
           tokenImgSrc={balz}
-        />&nbsp; &nbsp; &nbsp;<a href="https://quickswap.exchange/#/add/0xF44fB43066F7ECC91058E3A614Fb8A15A2735276/0x71B821aa52a49F32EEd535fCA6Eb5aa130085978" >Add Liquidity (Forge + 0xBTC)</a>
-        </h2><h3>{gezz}</h3>
+        />&nbsp; &nbsp; &nbsp;<a href="https://app.balancer.fi/#/arbitrum/pool/0x748951b8730da625d35a9a983d83b1a46afb7ca600020000000000000000028f" >Add/Remove Liquidity (ABAS + ETH)</a>
+        </h2>
 <BalanceMsg
           label={`You are Staking this many Balancer LP tokens `}
           amount={formattedBalance3.toFixed(18)}
@@ -200,6 +225,35 @@ var gezz
       <BalanceMsg
         label={`Your ETH rewards `}
         amount={(formatedStakingETH).toFixed(18)}
+        tokenImgSrc={eth}
+      />
+      <h2>
+     <BalanceMsg
+          label={`Your Wallets LP2 Tokens `}
+          amount={formattedTokenBalance.toFixed(18)}
+          tokenImgSrc={balz}
+        />&nbsp; &nbsp; &nbsp;<a href="https://app.balancer.fi/#/arbitrum/pool/0xe8505551eaff948449198524fd3590fd22704e7e000100000000000000000290" >Add/Remove Liquidity (ABAS + 0xBTC + bForge)</a>
+        
+        </h2>
+<BalanceMsg
+          label={`You are Staking this many Balancer LP2 tokens `}
+          amount={formattedBalance3z.toFixed(18)}
+          tokenImgSrc={balz}
+        />
+
+<BalanceMsg
+        label={`Your ABAS rewards LP #2 `}
+        amount={formattedBalance322z.toFixed(18)}
+        tokenImgSrc={imagez}
+      />
+      <BalanceMsg
+        label={`Your 0xBTC rewards LP #2 `}
+        amount={(formattedBalance32z* 1e10).toFixed(8)}
+        tokenImgSrc={imagezz}
+      />
+      <BalanceMsg
+        label={`Your ETH rewards LP #2`}
+        amount={(formatedStakingETH2).toFixed(18)}
         tokenImgSrc={eth}
       />
 

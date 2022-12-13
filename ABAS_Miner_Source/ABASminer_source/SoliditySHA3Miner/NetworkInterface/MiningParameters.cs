@@ -118,6 +118,7 @@ namespace SoliditySHA3Miner.NetworkInterface
             while (retryCount < 10)
                 try
                 {
+
                     MiningTarget = new HexBigInteger(getMiningTarget.CallAsync<BigInteger>().Result);
                     MiningTargetByte32 = Utils.Numerics.FilterByte32Array(MiningTarget.Value.ToByteArray(isUnsigned: true, isBigEndian: true));
                     MiningTargetByte32String = Utils.Numerics.Byte32ArrayToHexString(MiningTargetByte32);
@@ -223,6 +224,313 @@ namespace SoliditySHA3Miner.NetworkInterface
                 try
                 {
                     var rawDifficulty2= Utils.Json.InvokeJObjectRPC(url, getDifficulty2).SelectToken("$.result").Value<string>();
+
+                    Program.Print(string.Format("[INFO] New difficulty detected2 ({0})...", rawDifficulty2));
+                    if (rawDifficulty2.StartsWith("0x"))
+                        MiningDifficulty2 = new HexBigInteger(new BigInteger(Utils.Numerics.HexStringToByte32Array(rawDifficulty2), isUnsigned: true, isBigEndian: true));
+                    else
+                        MiningDifficulty2 = new HexBigInteger(BigInteger.Parse(rawDifficulty2));
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get difficulty NUMBER 2: " + ex.Message, ex.InnerException);
+                }
+
+            while (getTarget != null)
+                try
+                {
+                    var rawMiningTarget = Utils.Json.InvokeJObjectRPC(url, getTarget).SelectToken("$.result").Value<string>();
+                    if (rawMiningTarget.StartsWith("0x"))
+                    {
+                        MiningTargetByte32String = rawMiningTarget;
+                        MiningTargetByte32 = Utils.Numerics.HexStringToByte32Array(rawMiningTarget);
+                        MiningTarget = new HexBigInteger(new BigInteger(MiningTargetByte32, isUnsigned: true, isBigEndian: true));
+                    }
+                    else // currently pool returns in decimal format
+                    {
+                        MiningTarget = new HexBigInteger(BigInteger.Parse(rawMiningTarget));
+                        MiningTargetByte32 = Utils.Numerics.FilterByte32Array(MiningTarget.Value.ToByteArray(isUnsigned: true, isBigEndian: true));
+                        MiningTargetByte32String = Utils.Numerics.Byte32ArrayToHexString(MiningTargetByte32);
+                    }
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get target: " + ex.Message, ex.InnerException);
+                }
+
+            while (getMaximumTarget != null)
+                try
+                {
+                    MaximumTargetByte32String = Utils.Json.InvokeJObjectRPC(url, getMaximumTarget).SelectToken("$.result").Value<string>();
+                    MaximumTargetByte32 = Utils.Numerics.HexStringToByte32Array(MaximumTargetByte32String);
+                    MaximumTarget = new HexBigInteger(new BigInteger(MaximumTargetByte32, isUnsigned: true, isBigEndian: true));
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get maximum target: " + ex.Message, ex.InnerException);
+                }
+
+            while (getKingAddress != null)
+                try
+                {
+                    KingAddress = Utils.Json.InvokeJObjectRPC(url, getKingAddress).SelectToken("$.result").Value<string>();
+
+                    if (!string.IsNullOrWhiteSpace(KingAddress))
+                    {
+                        var kingAddressByte20 = (byte[])Array.CreateInstance(typeof(byte), Miner.MinerBase.ADDRESS_LENGTH);
+                        Utils.Numerics.AddressStringToByte20Array(KingAddress, ref kingAddressByte20, "king address");
+                        KingAddressByte20 = kingAddressByte20;
+                    }
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get king address: " + ex.Message, ex.InnerException);
+                }
+
+            while (getPause != null)
+                try
+                {
+                    var pauseString = Utils.Json.InvokeJObjectRPC(url, getPause).SelectToken("$.result").Value<string>();
+                    IsPause = bool.Parse(pauseString);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get pause: " + ex.Message, ex.InnerException);
+                }
+
+            while (getPoolMining != null)
+                try
+                {
+                    var poolMiningString = Utils.Json.InvokeJObjectRPC(url, getPoolMining).SelectToken("$.result").Value<string>();
+                    IsPoolMining = bool.Parse(poolMiningString);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get pool mining: " + ex.Message, ex.InnerException);
+                }
+        }
+    }
+    public class MiningParameters2
+    {
+        public HexBigInteger MiningDifficulty { get; private set; }
+        public HexBigInteger MiningDifficulty2 { get; private set; }
+        public HexBigInteger MiningTarget { get; private set; }
+        public HexBigInteger Challenge { get; private set; }
+        public HexBigInteger MaximumTarget { get; private set; }
+        public byte[] MiningTargetByte32 { get; private set; }
+        public byte[] ChallengeByte32 { get; private set; }
+        public byte[] MaximumTargetByte32 { get; private set; }
+        public byte[] EthAddressByte20 { get; private set; }
+        public byte[] KingAddressByte20 { get; private set; }
+        public string EthAddress { get; private set; }
+        public string MiningTargetByte32String { get; private set; }
+        public string MaximumTargetByte32String { get; private set; }
+        public string ChallengeByte32String { get; private set; }
+        public string KingAddress { get; private set; }
+        public bool IsPause { get; private set; }
+        public bool IsPoolMining { get; private set; }
+
+        public static MiningParameters2 GetSoloMiningParameters2(string ethAddress,
+                                                                Function getMiningDifficulty2,
+                                                               Function getChallengeNumber)
+        {
+            return new MiningParameters2(ethAddress, getMiningDifficulty2, getChallengeNumber);
+        }
+
+        public static MiningParameters2 GetMiningParameters2(string masterURL,
+                                                           JObject getEthAddress = null,
+                                                           JObject getChallenge = null,
+                                                           JObject getDifficulty = null,
+                                                           JObject getTarget = null,
+                                                           JObject getMaximumTarget = null,
+                                                           JObject getKingAddress = null,
+                                                           JObject getPause = null,
+                                                           JObject getPoolMining = null)
+        {
+            return new MiningParameters2(masterURL,
+                                        getDifficulty: getDifficulty, getChallenge: getChallenge);
+        }
+
+        private MiningParameters2(string ethAddress,
+                                 
+                                 Function getMiningDifficulty2,
+                                 Function getChallengeNumber
+                                 )
+        {
+            EthAddress = ethAddress;
+            var ethAddressByte20 = (byte[])Array.CreateInstance(typeof(byte), Miner.MinerBase.ADDRESS_LENGTH);
+            Utils.Numerics.AddressStringToByte20Array(EthAddress, ref ethAddressByte20);
+            EthAddressByte20 = ethAddressByte20;
+
+            var retryCount = 0;
+
+            while (retryCount < 10)
+                try
+                {
+                    //MiningDifficulty = new HexBigInteger(getMiningDifficulty.CallAsync<BigInteger>().Result);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get difficulty from network: " + ex.Message, ex.InnerException);
+                }
+            while (retryCount < 10)
+                try
+                {
+                    MiningDifficulty2 = new HexBigInteger(getMiningDifficulty2.CallAsync<BigInteger>().Result);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get difficulty from network: " + ex.Message, ex.InnerException);
+                }
+
+            while (retryCount < 10)
+                try
+                {
+                   // MiningTarget = new HexBigInteger(getMiningTarget.CallAsync<BigInteger>().Result);
+                    //MiningTargetByte32 = Utils.Numerics.FilterByte32Array(MiningTarget.Value.ToByteArray(isUnsigned: true, isBigEndian: true));
+                    //MiningTargetByte32String = Utils.Numerics.Byte32ArrayToHexString(MiningTargetByte32);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get target from network: " + ex.Message, ex.InnerException);
+                }
+
+            while (retryCount < 10)
+                try
+                {
+                    ChallengeByte32 = Utils.Numerics.FilterByte32Array(getChallengeNumber.CallAsync<byte[]>().Result);
+                    ChallengeByte32String = Utils.Numerics.Byte32ArrayToHexString(ChallengeByte32);
+                    Challenge = new HexBigInteger(new BigInteger(ChallengeByte32, isUnsigned: true, isBigEndian: true));
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get challenge from network: " + ex.Message, ex.InnerException);
+                }
+        }
+
+        private MiningParameters2(string url,
+                                 JObject getEthAddress = null,
+                                 JObject getChallenge = null,
+                                 JObject getDifficulty = null,
+                                 JObject getDifficulty2 = null,
+                                 JObject getTarget = null,
+                                 JObject getMaximumTarget = null,
+                                 JObject getKingAddress = null,
+                                 JObject getPause = null,
+                                 JObject getPoolMining = null)
+        {
+            var retryCount = 0;
+
+            while (getEthAddress != null)
+                try
+                {
+                    EthAddress = Utils.Json.InvokeJObjectRPC(url, getEthAddress).SelectToken("$.result").Value<string>();
+                    var ethAddressByte20 = (byte[])Array.CreateInstance(typeof(byte), Miner.MinerBase.ADDRESS_LENGTH);
+                    // some pools provide invalid checksum address
+                    Utils.Numerics.AddressStringToByte20Array(EthAddress, ref ethAddressByte20, isChecksum: false);
+                    EthAddressByte20 = ethAddressByte20;
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get address: " + ex.Message, ex.InnerException);
+                }
+
+            while (getChallenge != null)
+                try
+                {
+                    Challenge = new HexBigInteger(Utils.Json.InvokeJObjectRPC(url, getChallenge).SelectToken("$.result").Value<string>());
+                    ChallengeByte32 = Utils.Numerics.FilterByte32Array(Challenge.Value.ToByteArray(isUnsigned: true, isBigEndian: true));
+                    ChallengeByte32String = Utils.Numerics.Byte32ArrayToHexString(ChallengeByte32);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get challenge: " + ex.Message, ex.InnerException);
+                }
+
+            while (getDifficulty != null)
+                try
+                {
+                    var rawDifficulty = Utils.Json.InvokeJObjectRPC(url, getDifficulty).SelectToken("$.result").Value<string>();
+                    if (rawDifficulty.StartsWith("0x"))
+                        MiningDifficulty = new HexBigInteger(new BigInteger(Utils.Numerics.HexStringToByte32Array(rawDifficulty), isUnsigned: true, isBigEndian: true));
+                    else
+                        MiningDifficulty = new HexBigInteger(BigInteger.Parse(rawDifficulty));
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount < 10)
+                        Task.Delay(500).Wait();
+                    else
+                        throw new OperationCanceledException("Failed to get difficulty: " + ex.Message, ex.InnerException);
+                }
+
+
+            while (getDifficulty2 != null)
+                try
+                {
+                    var rawDifficulty2 = Utils.Json.InvokeJObjectRPC(url, getDifficulty2).SelectToken("$.result").Value<string>();
 
                     Program.Print(string.Format("[INFO] New difficulty detected2 ({0})...", rawDifficulty2));
                     if (rawDifficulty2.StartsWith("0x"))

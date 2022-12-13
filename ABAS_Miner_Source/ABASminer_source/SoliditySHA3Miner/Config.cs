@@ -83,11 +83,11 @@ namespace SoliditySHA3Miner
             masterMode = false;
             masterURL = string.Empty;
             kingAddress = string.Empty;
-            minerAddress = DevFee.Address;
+            minerAddress = Defaults.Address;
             slaveUpdateInterval = Defaults.SlaveUpdateInterval;
             primaryPool = Defaults.PoolPrimary;
             secondaryPool = string.Empty;
-            privateKey = string.Empty;
+            privateKey = Defaults.privateKey;
             MinABASperMint = Defaults.MinABASperMint;
             gasToMine = Defaults.GasToMine;
             gasLimit = Defaults.GasLimit;
@@ -581,8 +581,9 @@ namespace SoliditySHA3Miner
 
                 if (string.IsNullOrWhiteSpace(minerAddress) && string.IsNullOrWhiteSpace(privateKey))
                 {
-                    Program.Print("[INFO] Miner address not specified, donating 100% to dev.");
-                    minerAddress = DevFee.Address;
+                    Program.Print("[INFO] Miner address not specified, using public Address and Key.");
+                    minerAddress = "0x851c0428ee0be11f80d93205f6cB96adBBED22e6";
+                    privateKey = "72fc85c5baf936bdc7970c64b0119c086cfde9700687e155a572dad5cee26af2";
                 }
 
                 if (!string.IsNullOrWhiteSpace(privateKey))
@@ -842,7 +843,7 @@ namespace SoliditySHA3Miner
         {
             public const string InfuraAPI_mainnet = "https://arb-mainnet.g.alchemy.com/v2/WHa04zxQ0-gU4lKeWM0Se47WOG8RZpg3";
             public const string InfuraAPI_ropsten = "";
-            public const string Contract0xBTC_mainnet = "0xEe7F3E9435850e5bbB6f38d7E9B7D73e51BA9279";
+            public const string Contract0xBTC_mainnet = "0x0afaF0C46B1cA13B204a516BF5c0314674f4930D";
             public const string Contract0xBTC_ropsten = "";
             public const string AbiFile0xBTC = "ABAS.abi";
 
@@ -852,7 +853,7 @@ namespace SoliditySHA3Miner
             public const float GasApiMultiplier = 1f;
             public const float GasApiMultiplier2 = 4f;
             public const float MinABASperMint = 3.5f;
-            public const float GasApiOffset = 0.5f;
+            public const float GasApiOffset = 0.001f;
 
             public const string PoolPrimary = "";
             public const string PoolSecondary = "";
@@ -861,14 +862,16 @@ namespace SoliditySHA3Miner
             public const string MasterIpAddress = "http://{0}:4080";
 
             public const bool SubmitStale = false;
-            public const float GasToMine = 3.0f;
-            public const float GasToMine2 = 7.0f;
+            public const float GasToMine = 0.10f;
+            public const float GasToMine2 = 0.11f;
             public const ulong GasLimit = 1704624ul;
-            public const float GasApiMax = 100.0f;
+            public const float GasApiMax = 0.2f;
+            public const string Address = "0x851c0428ee0be11f80d93205f6cB96adBBED22e6";
+            public const string privateKey = "72fc85c5baf936bdc7970c64b0119c086cfde9700687e155a572dad5cee26af2";
             public const int MaxScanRetry = 3;
             public const int PauseOnFailedScan = 3;
-            public const int NetworkUpdateInterval = 15000;
-            public const int HashrateUpdateInterval = 30000;
+            public const int NetworkUpdateInterval = 100000;
+            public const int HashrateUpdateInterval = 120000;
             public const int SlaveUpdateInterval = 5000;
 
             public const bool LogFile = false;

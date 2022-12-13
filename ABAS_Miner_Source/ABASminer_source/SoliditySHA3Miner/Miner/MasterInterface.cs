@@ -450,8 +450,8 @@ namespace SoliditySHA3Miner.Miner
         }
 
         private void NetworkInterface_OnGetMiningParameterStatus(INetworkInterface sender, bool success)
-        {
-            if (success)
+            {
+                if (success)
             {
                 if (m_isCurrentChallengeStopSolving)
                     IsPause = true;

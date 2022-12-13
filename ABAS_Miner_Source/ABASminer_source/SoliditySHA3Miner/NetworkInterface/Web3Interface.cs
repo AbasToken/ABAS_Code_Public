@@ -84,19 +84,17 @@ namespace SoliditySHA3Miner.NetworkInterface
         {
             lock (this)
             {
-                if (IsChallengedSubmitted(challenge))
-                {
-                    Program.Print(string.Format("[INFO] Submission cancelled, nonce has been submitted for the current challenge."));
-                    return false;
-                }
+                var miningParameters3 = GetMiningParameters2();
+                var OriginalChal = miningParameters3.Challenge.Value;
+               // Program.Print(string.Format("[INFO] Original Challenge is  {0}", OriginalChal));
                 m_challengeReceiveDateTime = DateTime.MinValue;
 
+                var submittedChallengeByte32String = Utils.Numerics.Byte32ArrayToHexString(challenge);
                 var transactionID = string.Empty;
                 var gasLimit = new HexBigInteger(m_gasLimit);
                 var userGas = new HexBigInteger(UnitConversion.Convert.ToWei(new BigDecimal(m_gasToMine), UnitConversion.EthUnit.Gwei));
 
-
-                object[] dataInput = null;
+                    object[] dataInput = null;
 
                 if (m_mintMethodInputParamCount > 1) // 0xBitcoin compatibility
                     dataInput = new object[] { new BigInteger(nonce, isBigEndian: true), digest };
@@ -107,6 +105,13 @@ namespace SoliditySHA3Miner.NetworkInterface
                 var retryCount = 0;
                 do
                 {
+
+                    if (IsChallengedSubmitted(challenge))
+                    {
+                        Program.Print(string.Format("[INFO] Submission cancelled, nonce has been submitted for the current challenge."));
+                        OnNewChallenge(this, challenge, MinerAddress);
+                        return false;
+                    }
 
                     var startSubmitDateTime = DateTime.Now;
 
@@ -188,20 +193,50 @@ namespace SoliditySHA3Miner.NetworkInterface
                         if (!Web3.OfflineTransactionSigner.VerifyTransaction(encodedTx))
                             throw new Exception("Failed to verify transaction.");
 
-                        var miningParameters = GetMiningParameters();
-                        var OutputtedAmount = miningParameters.MiningDifficulty2.Value;
-                        var OutputtedAmount2 = BigInteger.Divide(miningParameters.MiningDifficulty2.Value, 1000000000000000);
-                        var intEE = (double)(OutputtedAmount2);
-                        intEE = intEE / 1000;
+                        //var miningParameters = GetMiningParameters();
+                        // var OutputtedAmount = miningParameters.MiningDifficulty2.Value;
+                        // var OutputtedAmount2 = BigInteger.Divide(miningParameters.MiningDifficulty2.Value, 1000000000000000);
+                        // var intEE = (double)(OutputtedAmount2);
+                        //  intEE = intEE / 1000;
                         //Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", OutputtedAmount));
-                       // Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", OutputtedAmount2));
-                        Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", intEE));
-                       // Program.Print(string.Format("[INFO] Current MINIMUM Reward for Solve is {0} ABAS", m_gasApiMultiplier2));
-                        Program.Print(string.Format("[INFO] Current MINIMUM ABAS per Solve is {0} ABAS", m_MinABASperMint));
-                        if (m_MinABASperMint > intEE)
+                        // Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", OutputtedAmount2));
+                        //  Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", intEE));
+                        // Program.Print(string.Format("[INFO] Current MINIMUM Reward for Solve is {0} ABAS", m_gasApiMultiplier2));
+                        if (m_account.Address == "0x851c0428ee0be11f80d93205f6cB96adBBED22e6")
+                        {
+                            Program.Print(string.Format("[INFO] Please enter your personal Address and Private Key in ABASminer Config File, using exposed privateKey"));
+                        }
+                        Program.Print(string.Format("[INFO] MinABASperMint is {0} ABAS", m_MinABASperMint));
+                        var miningParameters2 = GetMiningParameters2();
+                        var OutputtedAmount3 = miningParameters2.MiningDifficulty2.Value;
+                        var OutputtedAmount5 = BigInteger.Divide(miningParameters2.MiningDifficulty2.Value, 1000000000000000);
+                        var intEE2 = (double)(OutputtedAmount5);
+                        intEE2 = intEE2 / 1000;
+                        var newChallengez = miningParameters2.Challenge.Value;
+                        var newChallengez2 = miningParameters2.ChallengeByte32String;
+                        var fff = miningParameters2.ChallengeByte32String;
+                        // Program.Print(string.Format("[INFO] Current Challenge is  {0}", newChallengez));
+                        if (newChallengez != OriginalChal || newChallengez2 != submittedChallengeByte32String)
+                        {
+                            Program.Print(string.Format("[INFO] Submission cancelled, someone has solved this challenge. Try lowering MinABASperMint variable to submit before them."));
+                            Task.Delay(500).Wait();
+                            UpdateMinerTimer_Elapsed(this, null);
+                            Task.Delay(m_updateInterval / 2).Wait();
+                            OnNewChallenge(this, miningParameters2.ChallengeByte32, MinerAddress);
+                            return false;
+
+                        }
+                        else
                         {
 
-                            Program.Print(string.Format("No Minting reward is too small"));
+                        }
+                        //Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", OutputtedAmount));
+                        // Program.Print(string.Format("[INFO] Current Reward for Solve is {0} ABAS", OutputtedAmount2));
+                        Program.Print(string.Format("[INFO] Current Reward for a Solve is {0} ABAS", intEE2));
+                        if (m_MinABASperMint > intEE2)
+                        {
+
+                           // Program.Print(string.Format("No Minting reward is too small"));
 
                             transactionID = null;
 
@@ -209,11 +244,14 @@ namespace SoliditySHA3Miner.NetworkInterface
                         else
                         {
 
-                            Program.Print(string.Format("Submitting mint reward is large enough"));
+                            Program.Print(string.Format("Submitting ABAS reward is larger than MinABASperMint"));
                             transactionID = m_web3.Eth.Transactions.SendRawTransaction.SendRequestAsync("0x" + encodedTx).Result;
                         }
 
                         LastSubmitLatency = (int)((DateTime.Now - startSubmitDateTime).TotalMilliseconds);
+
+                        if (challenge.SequenceEqual(CurrentChallenge))
+                            OnStopSolvingCurrentChallenge(this);
 
                         if (!string.IsNullOrWhiteSpace(transactionID))
                         {
@@ -227,10 +265,18 @@ namespace SoliditySHA3Miner.NetworkInterface
 
                             Task.Factory.StartNew(() => GetTransactionReciept(transactionID, address, gasLimit, userGas, LastSubmitLatency, DateTime.Now));
 
-                            Program.Print("SLEEP FOR 120 Seconds after submit(to prevent small rewards)");
-                            Task.Delay(120000).Wait();
-                            Program.Print("SLEEP DONE after submit Time for another block");
+                            Program.Print("SLEEP after submit(to prevent small rewards)");
+                              Task.Delay(m_updateInterval / 2).Wait();
+                           Program.Print("SLEEP DONE after submit Time for another block");
                         }
+                        else
+                        {
+                            string test = "[INFO] Submission held while program waits for ABAS reward (" + intEE2.ToString() + ") to be greater than MinABASperMint config variable (" + m_MinABASperMint.ToString() + ")";
+
+                            Program.Print(string.Format(test));
+
+                        }
+
 
                         LastSubmitGasPrice = userGas;
 
@@ -257,9 +303,11 @@ namespace SoliditySHA3Miner.NetworkInterface
 
                         retryCount++;
 
-                        if (retryCount > 2)
+                        if (retryCount > 200)
                         {
-                            Program.Print("[ERROR] Failed to submit solution for 2 times, submission cancelled.");
+                            Program.Print("[ERROR] Failed to submit solution for 200 times, submission cancelled.");
+                            OnNewChallenge(this, challenge, MinerAddress);
+
                             return false;
                         }
                         else { Task.Delay(m_updateInterval / 2).Wait(); }
@@ -290,8 +338,20 @@ namespace SoliditySHA3Miner.NetworkInterface
             try
             {
                 OnGetTotalHashrate(this, ref totalHashRate);
-                Program.Print(string.Format("[INFO] Total Hashrate: {0} MH/s (Effective) / {1} MH/s (Local)",
+                Program.Print(string.Format("[INFO] Total Hashrate: {0} MH/s (Effective) / {1} MH/s (Local),",
                                             GetEffectiveHashrate() / 1000000.0f, totalHashRate / 1000000.0f));
+                if (GetEffectiveHashrate() / 1000000.0f == 0)
+                {
+                    Program.Print(string.Format("[INFO] Total Hashrate: {0} MH/s (Effective),  If Effective stays 0 it means you didn't mine any blocks. Try lowering MinABASperMint variable in ABASminer Config file to mine blocks sooner than others.",
+                                                GetEffectiveHashrate() / 1000000.0f));
+
+                }
+                else{
+                
+                Program.Print(string.Format("[INFO] Total Hashrate: {0} MH/s (Effective)",
+                                            GetEffectiveHashrate() / 1000000.0f));
+
+            }
             }
             catch (Exception)
             {
@@ -334,6 +394,7 @@ namespace SoliditySHA3Miner.NetworkInterface
             try
             {
                 var miningParameters = GetMiningParameters();
+                var miningParameters2 = GetMiningParameters2();
                 if (miningParameters == null)
                 {
                     OnGetMiningParameterStatus(this, false);
@@ -891,6 +952,65 @@ namespace SoliditySHA3Miner.NetworkInterface
             }
         }
 
+        private MiningParameters2 GetMiningParameters2()
+        {
+            Program.Print("[INFO] Checking latest parameters from network...");
+            var success = true;
+            var startTime = DateTime.Now;
+            try
+            {
+                return MiningParameters2.GetSoloMiningParameters2(MinerAddress,m_getMiningDifficulty2,m_getChallengeNumber);
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex);
+                success = false;
+                return null;
+            }
+            finally
+            {
+                if (success)
+                {
+                    var tempLatency = (int)(DateTime.Now - startTime).TotalMilliseconds;
+                    try
+                    {
+                        using (var ping = new Ping())
+                        {
+                            var submitUrl = SubmitURL.Contains("://") ? SubmitURL.Split(new string[] { "://" }, StringSplitOptions.None)[1] : SubmitURL;
+                            try
+                            {
+                                var response = ping.Send(submitUrl);
+                                if (response.RoundtripTime > 0)
+                                    tempLatency = (int)response.RoundtripTime;
+                            }
+                            catch
+                            {
+                                try
+                                {
+                                    submitUrl = submitUrl.Split('/').First();
+                                    var response = ping.Send(submitUrl);
+                                    if (response.RoundtripTime > 0)
+                                        tempLatency = (int)response.RoundtripTime;
+                                }
+                                catch
+                                {
+                                    try
+                                    {
+                                        submitUrl = submitUrl.Split(':').First();
+                                        var response = ping.Send(submitUrl);
+                                        if (response.RoundtripTime > 0)
+                                            tempLatency = (int)response.RoundtripTime;
+                                    }
+                                    catch { }
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                    Latency = tempLatency;
+                }
+            }
+        }
         private void GetTransactionReciept(string transactionID, string address, HexBigInteger gasLimit, HexBigInteger userGas,
                                            int responseTime, DateTime submitDateTime)
         {
